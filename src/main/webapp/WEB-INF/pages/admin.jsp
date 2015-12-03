@@ -113,32 +113,57 @@
 			}
         </style>
         <script>var loggedInUser = '<sec:authentication property="principal.username" />'</script>
+        <script>
+			$(document).ready(function() {
+				
+				//Handles menu drop down
+				$('.dropdown-menu').find('form').click(function (e) {
+					e.stopPropagation();
+				});
+				
+				 $('#startRegistrationButton, #stopRegistrationButton').on('click', function(e) {
+					 $('#registrationMessageDiv').html('');
+					 e.preventDefault(); 
+					 $.ajax({
+							type: 'POST',
+							url: 'updateflag/ALLOW_CREATE_USER/' + e.target.name,
+							contentType: 'application/json; charset=utf-8',
+							dataType: 'json',
+							success: function(result) {
+								$('#registrationMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
+							},error:function(jqXHR, textStatus, errorThrown) {
+								$('#registrationMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
+							}											
+						});
+				 });
+				 
+				 $('#buildTeamButton').on('click', function(e) {
+					 e.preventDefault(); 
+					 $('#buildTeamMessageDiv').html('');
+					 var $btn = $(this).button('loading');
+					 $.ajax({
+							type: 'POST',
+							url: 'buildteam',
+							contentType: 'application/json; charset=utf-8',
+							dataType: 'json',
+							success: function(result) {
+								setTimeout(function() {
+									$btn.button('reset');
+									$('#buildTeamMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
+								}, 30000);
+							},error:function(jqXHR, textStatus, errorThrown) {
+								$btn.button('reset');
+								$('#buildTeamMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
+							}											
+						});
+				 });
+				 
+				 //$("#buildTeamButton").prop("disabled", true);
+				 
+			});
+		</script>
     </head>
     <body>
-		<!-- <div class="container-fluid">
-			 <header class="navbar navbar-default bs-docs-nav navbar-static-top" role="banner"> 
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						</button>
-						<a class="navbar-brand" href="#"><img src="resources/dhl_logo.png">
-						</a>
-					</div>
-					<div class="collapse navbar-collapse" role="navigation">
-						<ul class="nav navbar-nav">
-							<li></li>
-						</ul>
-						<ul class="nav navbar-nav pull-right" style="margin-top:4px;">
-							<li><h4 id="welcomeUser"><small>Welcome <strong><sec:authentication property="principal.username" /></strong></small></h4></li>
-							<li>&nbsp;&nbsp;&nbsp;</li>
-							<li><a href="<c:url value="j_spring_security_logout" />" class="btn btn-primary btn-sm" id="logout" style="margin-top:7px;">Logout</a>
-						</ul>
-					</div>            
-			</header>
-		</div>-->
 		<div class="container">
 	    	<header class="navbar navbar-default bs-docs-nav navbar-static-top" role="banner"> 
 				<div class="container-fluid">
@@ -168,162 +193,13 @@
 		<br>
         <div class="container">	
 			<div class="row">	
-				 <div class="col-lg-10 col-xs-offset-1">
-						<div class="row">
-							<h2><span class="label label-info">Tournament Progress - Admin View</span>
-								<div id="updateProgressBar" class="progress" style="width:250px;margin-top: 24px;margin-bottom: -17px;">
-								  <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" style="width: 100%">
-									<span style="font-weight:bold;color:rgba(212, 5, 17, 0.61);">Updating Bracket...</span>
-								  </div>
-								</div>
-							</h2>
-						</div>
-						<br>
-						<div class="row">
-							<div id="minimal">
-								<script>
-									$(document).ready(function() {
-										
-										//Handles menu drop down
-										$('.dropdown-menu').find('form').click(function (e) {
-											e.stopPropagation();
-										});
-										
-										$('#updateProgressBar').hide(); 
-										
-										$.ajax({
-											type: 'GET',
-											url: 'getfoosball.html',
-											contentType: 'application/json; charset=utf-8',
-											dataType: 'json',
-											success: function(result) {
-												var container = $('#minimal');
-												container.bracket({
-													init: result,
-													save: saveFn,
-													userData: 'postfoosball.html'
-												});
-											},error:function(jqXHR, textStatus, errorThrown){
-												$('#minimal').append('<div class="alert alert-danger" role="alert" style="width:470px;">' +
-														'<Strong>Failed to the load tournament bracket.' +
-														'</strong> Contact the site admins.</div>');
-											}								
-										});
-										
-										/* 
-										 * Called whenever bracket is modified
-										 *
-										 * data:     changed bracket object in format given to init
-										 * postUrl: optional data given when bracket is created.
-										 */
-										function saveFn(data, postUrl) {
-											$('#updateProgressBar').show();
-											$.ajax({
-												type: 'POST',
-												url: postUrl,
-												contentType: 'application/json; charset=utf-8',
-												dataType: 'json',
-												data: $.toJSON(data),
-												success: function(result) {
-													var container = $('#minimal');
-													container.bracket({
-														init: result,
-														save: saveFn,
-														userData: 'postfoosball.html'
-													});
-													$('#updateProgressBar').hide();
-												} ,error:function(jqXHR, textStatus, errorThrown){
-													$('#updateProgressBar').hide();
-												}												
-											});
-										 }
-										
-										 $('#startRegistrationButton, #stopRegistrationButton').on('click', function(e) {
-											 $('#registrationMessageDiv').html('');
-											 e.preventDefault(); 
-											 $.ajax({
-													type: 'POST',
-													url: 'updateflag/ALLOW_CREATE_USER/' + e.target.name,
-													contentType: 'application/json; charset=utf-8',
-													dataType: 'json',
-													success: function(result) {
-														$('#registrationMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
-													},error:function(jqXHR, textStatus, errorThrown) {
-														$('#registrationMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
-													}											
-												});
-										 });
-										 
-										 $('#startPlayerRatingButton, #stopPlayerRatingButton').on('click', function(e) {
-											 $('#ratingsMessageDiv').html('');
-											 e.preventDefault(); 
-											 $.ajax({
-													type: 'POST',
-													url: 'updateflag/ALLOW_RATINGS_UPDATE/' + e.target.name,
-													contentType: 'application/json; charset=utf-8',
-													dataType: 'json',
-													success: function(result) {
-														$('#ratingsMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
-													},error:function(jqXHR, textStatus, errorThrown) {
-														$('#ratingsMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
-													}											
-												});
-										 });
-										 
-										 $('#startTeamNameUpdatesButton, #stopTeamNameUpdatesButton').on('click', function(e) {
-											 $('#teamMessageDiv').html('');
-											 e.preventDefault(); 
-											 $.ajax({
-													type: 'POST',
-													url: 'updateflag/ALLOW_TEAM_UPDATE/' + e.target.name,
-													contentType: 'application/json; charset=utf-8',
-													dataType: 'json',
-													success: function(result) {
-														$('#teamMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
-													},error:function(jqXHR, textStatus, errorThrown) {
-														$('#teamMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
-													}											
-												});
-										 });
-										 
-										 $('#buildTeamButton').on('click', function(e) {
-											 e.preventDefault(); 
-											 $('#buildTeamMessageDiv').html('');
-											 var $btn = $(this).button('loading');
-											 $.ajax({
-													type: 'POST',
-													url: 'buildteam',
-													contentType: 'application/json; charset=utf-8',
-													dataType: 'json',
-													success: function(result) {
-														setTimeout(function() {
-															$btn.button('reset');
-															$('#buildTeamMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Updated!!!</strong></div>');
-														}, 30000);
-													},error:function(jqXHR, textStatus, errorThrown) {
-														$btn.button('reset');
-														$('#buildTeamMessageDiv').append('<div class="alert alert-danger" role="alert"><strong>Error : ' + errorThrown + ' </strong></div>');
-													}											
-												});
-										 });
-										 
-										 $("#buildTeamButton").prop("disabled", true);
-										 
-									});
-								</script>
-							</div>
-						</div>
-					</div>	
-			</div>
-			<hr>
-			<div class="row">	
-				<div class="col-sm-3 col-xs-offset-1">
+				<div class="col-sm-5 col-xs-offset-1">
 					<div class="row">
-						<h2><span class="label label-info">User Registration</span></h2>
+						<h3>Member Registration</h3>
 					</div>
 					<br>
 					<form role="form">
-						<h4><small>Use this section to start/stop new user registration. (enables/disables 'Create User button' on the sign up screen)</small></h4>
+						<h4><small>Use this section to start/stop new member registration.<br> (enables/disables 'Register' button on the sign up screen)</small></h4>
 						<br>
 						<div class="row">
 							<div class="col-xs-12 col-md-6"><input id="startRegistrationButton" type="submit" name="TRUE" value="Start" class="btn btn-success btn-lg btn-block"></div>
@@ -335,55 +211,16 @@
 						
 					</div>				
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-5 col-xs-offset-1">
 					<div class="row">
-						<h2><span class="label label-info">Rating other players</span></h2>
+						<h3>Build Teams</h3>
 					</div>
 					<br>
 					<form role="form">
-						<h4><small>Use this section to start/stop player ratings (enables/disables 'Rate Players' button on the user screen)</small></h4>
+						<h4><small>Use this section to trigger team selection<br>Team selection should be used only once</small></h4>
 						<br>
 						<div class="row">
-							<div class="col-xs-12 col-md-6"><input id="startPlayerRatingButton" type="submit" name="TRUE" value="Start" class="btn btn-success btn-lg btn-block"></div>
-							<div class="col-xs-12 col-md-6"><input id="stopPlayerRatingButton" type="submit" name="FALSE" value="Stop" class="btn btn-success btn-lg btn-block"></div>
-						</div>
-					</form>
-					<br>
-					<div class="row" id="ratingsMessageDiv">
-						
-					</div>		
-				</div>
-				<div class="col-sm-3">
-					<div class="row">
-						<h2><span class="label label-info">Team name update</span></h2>
-					</div>
-					<br>
-					<form role="form">
-						<h4><small>Use this section to start/stop team name updates (enables/disables 'Update Team Name' button on the user screen)</small></h4>
-						<br>
-						<div class="row">
-							<div class="col-xs-12 col-md-6"><input id="startTeamNameUpdatesButton" type="submit" name="TRUE" value="Start" class="btn btn-success btn-lg btn-block"></div>
-							<div class="col-xs-12 col-md-6"><input id="stopTeamNameUpdatesButton" type="submit" name="FALSE" value="Stop" class="btn btn-success btn-lg btn-block"></div>
-						</div>
-					</form>
-					<br>
-					<div class="row" id="teamMessageDiv">
-						
-					</div>				
-				</div>
-			</div>
-			<hr>
-			<div class="row">	
-				<div class="col-sm-3 col-xs-offset-1">
-					<div class="row">
-						<h2><span class="label label-info">Build Teams</span></h2>
-					</div>
-					<br>
-					<form role="form">
-						<h4><small>Use this section to trigger team selection</small></h4>
-						<br>
-						<div class="row">
-							<div class="col-xs-12 col-md-6"><button id="buildTeamButton" type="submit" class="btn btn-success btn-lg btn-block" data-loading-text="Drawing...   ">Draw Teams</button></div>
+							<div class="col-xs-12 col-md-6"><button id="buildTeamButton" type="submit" class="btn btn-success btn-block btn-lg" data-loading-text="Drawing...   ">Draw Teams&nbsp;</button></div>
 						</div>
 					</form>
 					<br>

@@ -160,12 +160,12 @@
 						dataType: 'json',
 						success: function(result) {
 							$('#playerMessageDiv').html('');
-							var tableHtml = '<table class="table table-bordered table-striped table-hover"><th>Members</th><th>Department</th><th>NINJA TEAM</th><th>RSVP</th></tr></thead><tbody>';
+							var tableHtml = '<table class="table table-bordered table-striped table-hover"><th>Members</th><th>Department</th><th>RSVP</th><th>Participating in NINJA</th></tr></thead><tbody>';
 							 $.each(result, function (index, value) {
 								 tableHtml += '<tr><td>' + value.firstName + ' ' + value.lastName + '</td>';
 								 tableHtml += '<td>' + value.department + '</td>';
-								 tableHtml += '<td>' + '  ' + '</td>';
-								 tableHtml += '<td>' + ' ' + '</td>';
+								 tableHtml += '<td>' + value.rsvp + '</td>';
+								 tableHtml += '<td>' + value.ninja + '</td>';
 								 tableHtml += '</tr>';
 							 });
 							 tableHtml += '</tbody></table>';
@@ -208,7 +208,7 @@
 		           <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 							<ul class="nav navbar-nav">
 								<li class="active"><a href="home">Home</a></li>
-								<li><a href="signup">Registration</a></li>
+								<li><a href="signup">Sign In</a></li>
 								<li><a href="resetpassword">Reset Password</a></li>
 						   </ul>
 					</nav>
@@ -230,7 +230,6 @@
 			    <li data-target="#carousel-example" data-slide-to="10"></li>
 			    <li data-target="#carousel-example" data-slide-to="11"></li>
 			    <li data-target="#carousel-example" data-slide-to="12"></li>
-			    <li data-target="#carousel-example" data-slide-to="13"></li>
 			  </ol>
 			
 			  <div class="carousel-inner">

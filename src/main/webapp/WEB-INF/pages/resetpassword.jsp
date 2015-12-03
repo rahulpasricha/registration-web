@@ -127,7 +127,7 @@
 		           <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 							<ul class="nav navbar-nav">
 								<li><a href="home">Home</a></li>
-								<li><a href="signup">Registration</a></li>
+								<li><a href="signup">Sign In</a></li>
 								<li class="active"><a href="resetpassword">Reset Password</a></li>
 						   </ul>
 					</nav>

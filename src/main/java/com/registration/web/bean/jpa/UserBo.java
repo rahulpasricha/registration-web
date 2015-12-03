@@ -54,6 +54,28 @@ public class UserBo implements Serializable {
 	
 	@ManyToMany(mappedBy = "ratedUser")
 	private List<UserRatingBo> ratedUsers;
+	
+	@JoinColumn(name = "RSVP")
+	private boolean rsvp;
+	
+	@JoinColumn(name = "NINJA")
+	private boolean ninja;
+
+	public boolean isRsvp() {
+		return rsvp;
+	}
+
+	public void setRsvp(boolean rsvp) {
+		this.rsvp = rsvp;
+	}
+
+	public boolean isNinja() {
+		return ninja;
+	}
+
+	public void setNinja(boolean ninja) {
+		this.ninja = ninja;
+	}
 
 	public List<UserRatingBo> getRatingUsers() {
 		return ratingUsers;

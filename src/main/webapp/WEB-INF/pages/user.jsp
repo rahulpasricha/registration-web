@@ -109,30 +109,170 @@
 			}
         </style>
         <script>var loggedInUser = '<sec:authentication property="principal.username" />'</script>
+        <script>
+								
+			function getRsvpStatus(username) {
+				$.ajax({
+					type: 'GET',
+					url: 'getRsvpStatus/' + username ,
+					success: function(result) {
+						$("#currentRsvpStatus").html(result);
+					}							
+			  	});
+			};
+			
+			function getNinjaStatus(username) {
+				$.ajax({
+					type: 'GET',
+					url: 'getNinjaStatus/' + username ,
+					success: function(result) {
+						$("#currentNinjaStatus").html(result);
+					}							
+			  	});
+			};
+		
+			$(document).ready(function() {
+				
+				//Handles menu drop down
+				$('.dropdown-menu').find('form').click(function (e) {
+					e.stopPropagation();
+				});
+				
+				$('#rsvpInButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updateRsvpStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updateRsvpStatus/' + loggedInUser + '/' + 'true',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updateRsvpStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>RSVP status updated successfully.</strong></div>');
+							getRsvpStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updateRsvpStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
+				$('#rsvpOutButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updateRsvpStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updateRsvpStatus/' + loggedInUser + '/' + 'false',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updateRsvpStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>RSVP status updated successfully.</strong></div>');
+							getRsvpStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updateRsvpStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
+				$('#ninjaInButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updateNinjaStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updateNinjaStatus/' + loggedInUser + '/' + 'true',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updateNinjaStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>NINJA status updated successfully.</strong></div>');
+							getNinjaStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updateNinjaStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
+				
+				$('#ninjaOutButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updateNinjaStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updateNinjaStatus/' + loggedInUser + '/' + 'false',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updateNinjaStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>NINJA status updated successfully.</strong></div>');
+							getNinjaStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updateNinjaStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
+				$(function() {
+					getRsvpStatus(loggedInUser);
+					getNinjaStatus(loggedInUser);
+				});
+				
+			});
+			
+		</script>
     </head>
-    <body>
-		<!-- <div class="container-fluid">
-			 <header class="navbar navbar-default bs-docs-nav navbar-static-top" role="banner"> 
-				<div class="navbar-header">
-						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						</button>
-						<a class="navbar-brand" href="#"><img src="resources/dhl_logo.png">
-						</a>
-					</div>
-					<div class="collapse navbar-collapse" role="navigation">
-						<ul class="nav navbar-nav pull-right" style="margin-top:4px;">
-							<li><h4 id="welcomeUserTest"></h4></li>
-							<li><h4 id="welcomeUser"><small>Welcome <strong><sec:authentication property="principal.username" /></strong></small></h4></li>
-							<li>&nbsp;&nbsp;&nbsp;</li>
-							<li><a href=<c:url value="j_spring_security_logout" /> class="btn btn-primary btn-sm" id="logout" style="margin-top:7px;">Logout</a></li>
-						</ul>
-					</div>
-			</header>
-		</div>  -->
+    <body>		
 		<div class="container">
 	    	<header class="navbar navbar-default bs-docs-nav navbar-static-top" role="banner"> 
 				<div class="container-fluid">
@@ -161,226 +301,43 @@
 		</div>
 		<br>
         <div class="container">	
-			<div class="row">	
-				 <div class="col-sm-7 col-xs-offset-1">
-						<div class="row">
-							<h2><span class="label label-info">Tournament Progress</span></h2>
-						</div>
-						<br>
-						<div class="row">
-							<div id="minimal">
-								<script>
-								
-									function getTeamName(username) {
-										$.ajax({
-											type: 'GET',
-											url: 'getTeamName/' + username ,
-											success: function(result) {
-												$("#currentTeamName").html(result);
-											}							
-									  	});
-									};
-								
-									$(document).ready(function() {
-										
-										//Handles menu drop down
-										$('.dropdown-menu').find('form').click(function (e) {
-											e.stopPropagation();
-										});
-										
-										$.ajax({
-											type: 'GET',
-											url: 'getFlagToAllowRatingUpdate',
-											success: function(result) {
-												$("#ratePlayersButton").prop("disabled", ("TRUE" == result) ? false : true);
-											}
-										});
-										$.ajax({
-											type: 'GET',
-											url: 'getFlagToAllowTeamNameUpdate',
-											success: function(result) {
-												$("#updateTeamNameButton").prop("disabled", ("TRUE" == result) ? false : true);
-											}							
-									  	});
-										
-										$.ajax({
-												type: 'GET',
-												url: 'getfoosball.html',
-												contentType: 'application/json; charset=utf-8',
-												dataType: 'json',
-												success: function(result) {
-													var container = $('#minimal');
-													container.bracket({
-														init: result
-														//save: saveFn
-													});
-												},error:function(jqXHR, textStatus, errorThrown){
-													$('#minimal').append('<div class="alert alert-danger" role="alert" style="width:430px;">' +
-													'<Strong>Failed to load tournament bracket.' +
-													'</strong> Contact the site admins.</div>');
-												}							
-										  });
-										
-										var resultsFromServer;
-										
-										$.ajax({
-											type: 'GET',
-											url: 'getRatings/' + loggedInUser,
-											contentType: 'application/json; charset=utf-8',
-											dataType: 'json',
-											success: function(result) {
-												resultsFromServer = result;
-												$('#ratingsMessageDiv').html('');
-												var tableHtml = '<table name="opponentTable" class="table table-bordered table-striped table-hover table-condensed"><thead><tr><th>Player</th><th>Rating</th></tr></thead><tbody>';
-												 $.each(result, function (index, value) {
-													 var rating = value.rating;
-													 var comboBoxHtml = '<select class="opponent" name="opponent' + index + '"><option value="3" ' + ((rating == 0 || rating == 3) ? ' selected="selected">' : '>') + 'UNKNOWN</option>' +
-															 			'<option value="1" ' + (rating == 1 ? ' selected="selected">' : '>') + 'BEGINNER</option>' +
-																	 	'<option value="2" ' + (rating == 2 ? ' selected="selected">' : '>') + 'INTERMEDIATE</option>' +
-																		'<option value="4" ' + (rating == 4 ? ' selected="selected">' : '>') + 'ADVANCED</option>' +
-																		'<option value="5" ' + (rating == 5 ? ' selected="selected">' : '>') + 'EXPERT</option></select>';
-													 tableHtml += '<tr><td>' + value.foosballPlayerName + '</td><td>' + comboBoxHtml + '</td></tr>';
-												 });
-												 tableHtml += '</tbody></table>';
-												 $(tableHtml).appendTo($('#ratingsDiv'));
-												 
-												 if (result.length == 0) {
-													 $('#ratingsMessageDiv').append('<div class="alert alert-info" role="alert"><strong>No users available to rate.</strong></div>');													 
-												 } else {
-													 $('#ratingsMessageDiv').append('');
-												 }										
-											},error:function(jqXHR, textStatus, errorThrown){
-												var errorFromServer;
-												if(jqXHR.responseText !== ''){
-													errorFromServer = jqXHR.responseText;
-													if (errorFromServer.indexOf("<html>") >= 0) {
-														errorFromServer = errorThrown;
-													}
-											    } else {
-											    	errorFromServer = errorThrown;
-											    }
-												$('#ratingsMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
-											}							
-									  	});
-										
-										$('#playerRatingsForm').submit(function(e) {
-											e.preventDefault();
-											$('#ratingsMessageDiv').html('');
-											$('.opponent').each(function (index, value) {
-												resultsFromServer[index].rating = $(this).val();												
-											});
-											var formJson = JSON.stringify({"username" : loggedInUser, "ratings" : resultsFromServer});
-											$.ajax ({
-												type: 'POST',
-												contentType: 'application/json; charset=utf-8',
-												data: formJson,
-												url: 'updateRatings',
-												dataType: 'json',												
-												success: function(result) {
-													$('#ratingsMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Ratings Updated Successfully.</strong></div>');
-												},error:function(jqXHR, textStatus, errorThrown){
-													var errorFromServer;
-													if(jqXHR.responseText !== ''){
-														errorFromServer = jqXHR.responseText;
-														if (errorFromServer.indexOf("<html>") >= 0) {
-															errorFromServer = errorThrown;
-														}
-												    } else {
-												    	errorFromServer = errorThrown;
-												    }
-													$('#ratingsMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
-												}						
-											});	
-											
-										});
-										
-										$('#updateTeamNameForm').submit(function(e) {
-											e.preventDefault();
-											$('#updateTeamNameMessageDiv').html('');
-											
-											$.ajax ({
-												type: 'POST',
-												contentType: 'application/json; charset=utf-8',
-												url: 'updateTeamName/' + loggedInUser + '/' + $('#teamName').val(),
-												dataType: 'json',												
-												success: function(result) {
-													$('#updateTeamNameMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Team Name Updated Successfully.</strong></div>');
-													getTeamName(loggedInUser);
-												},error:function(jqXHR, textStatus, errorThrown){
-													var errorFromServer;
-													if(jqXHR.responseText !== ''){
-														errorFromServer = jqXHR.responseText;
-														if (errorFromServer.indexOf("<html>") >= 0) {
-															errorFromServer = errorThrown;
-														}
-												    } else {
-												    	errorFromServer = errorThrown;
-												    }
-													$('#updateTeamNameMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
-												}						
-											});	
-											
-										});
-										
-										$(function() {
-											getTeamName(loggedInUser);
-										});
-										
-									});
-									
-								</script>
-							</div>
-						</div>
-					</div>			
-			</div>
-			<hr>
 			<div class="row">
 				<div class="col-sm-4 col-xs-offset-1">
 					<div class="row">
-						<h2><span class="label label-info">Rate Your Opponents</span></h2>
+						<h3>RSVP for the Christmas Party</h3>
 					</div>
 					<br>
 					<div class="row">
-						<form class="form" role="form" id="playerRatingsForm" name="playerRatingsForm">
-							<h4><small>Rate other players based on their skill level. This will be taken into account when the teams are drawn and will make
-							sure the teams are well balanced.</small></h4>
-							<h4><small>If the Rate Players button is disabled, don't worry,it means that all the players haven't finished registration. Once every one has
-							registered, you can start rating your opponents.</small></h4>
-							<hr>
-							<div class="row" id="ratingsDiv"></div>
-							<div class="row">
-								<div class="col-xs-12 col-md-6"><input id="ratePlayersButton" type="submit" value="Rate Players" class="btn btn-success btn-block btn-lg"></div>
-							</div>
-							<br>
-							<div class="row" id="ratingsMessageDiv"></div>
-						</form>
+						<h3><small>Your current RSVP status is &nbsp&nbsp</small><span class="label label-info" id="currentRsvpStatus"></span></h3>
+						<h3><small>Use the following buttons to update your RSVP status</small><span class="label label-default" id="currentRsvpStatus"></span></h3>
+						<br>
+						<div class="row">
+							<div class="col-xs-12 col-md-6"><button id="rsvpInButton" type="submit" value="IN" class="btn btn-success btn-block btn-lg" data-loading-text="Updating...">IN</button></div>
+							<div class="col-xs-12 col-md-6"><button id="rsvpOutButton" type="submit" value="OUT" class="btn btn-danger btn-block btn-lg" data-loading-text="Updating...">OUT</button></div>
+						</div>
+						<br>
+						<div class="form-group" id="updateRsvpStatusMessageDiv">
+							
+						</div>						
 					</div>
 				</div>
 				<div class="col-sm-5 col-xs-offset-1">
 					<div class="row">
-						<h2><span class="label label-info">Update Your Team Name</span></h2>
+						<h3>NINJA status</h3>
 					</div>
 					<br>
 					<div class="row">
-						<h3><small>Your current team name is &nbsp&nbsp</small><span class="label label-default" id="currentTeamName"></span></h3>
+						<h3><small>Your current NINJA status is &nbsp&nbsp</small><span class="label label-info" id="currentNinjaStatus"></span></h3>
+						<h3><small>Use IN button if you want to participate in the NINJA game</small><span class="label label-default" id="currentNinjaStatus"></span></h3>
 						<br>
-						<div class="alert alert-info" role="alert">
-						  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						  Please consult with your team mate before changing the team name, don't keep your partner out of the loop.							  
+						<div class="row">
+							<div class="col-xs-12 col-md-6"><button id="ninjaInButton" type="submit" value="IN" class="btn btn-success btn-block btn-lg" data-loading-text="Updating...">IN</button></div>
+							<div class="col-xs-12 col-md-6"><button id="ninjaOutButton" type="submit" value="OUT" class="btn btn-danger btn-block btn-lg" data-loading-text="Updating...">OUT</button></div>
 						</div>
-						<hr>
-						<form role="form" id="updateTeamNameForm">
-							<div class="form-group">
-								<input type="text" name="teamName" id="teamName" class="form-control input-md updateteamname" placeholder="Team name" required>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 col-md-6"><input id="updateTeamNameButton" type="submit" value="Update" class="btn btn-success btn-block btn-lg"></div>
-							</div>
-							<br>
-							<div class="form-group" id="updateTeamNameMessageDiv">
-								
-							</div>						
-						</form>
+						<br>
+						<div class="form-group" id="updateNinjaStatusMessageDiv">
+							
+						</div>
 					</div>
 				</div>
 			</div>

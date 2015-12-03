@@ -67,13 +67,13 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				
-				$.ajax({
+				/*$.ajax({
 					type: 'GET',
 					url: 'getFlagToAllowCreateUser',
 					success: function(result) {
 						$("#createUserButton").prop("disabled", ("TRUE" == result) ? false : true);
 					}
-				});
+				});*/
 				
 				$.ajax({
 					 url:"getTeamMasterdata"
@@ -94,6 +94,7 @@
 				
 				$('#createUserButton').on('click', function(e) {
 					e.preventDefault();
+					var $btn = $(this).button('loading');
 					
 					$('.createuser').show();
 					
@@ -102,7 +103,7 @@
 					var password = $("#password").val().trim();
 					var firstname = $('#firstName').val().trim();
 					var lastname = $('#lastName').val().trim();
-					var department = $('#department').val().trim();
+					var department = $('#department').val();
 					
 					var errorMessage;
 					if (username == '') {
@@ -117,9 +118,12 @@
 					} else if (lastname == '') {
 						errorMessage = '<div class="alert alert-danger" role="alert"><strong>Please enter your last name</strong></div>';
 						$('#lastName').focus();
-					} else if (department == '') {
+					} else if (department == ' ') {
 						errorMessage = '<div class="alert alert-danger" role="alert"><strong>Please select a department</strong></div>';
 						$('#department').focus();
+						$('#messageDiv').append(errorMessage);
+						$btn.button('reset');
+						return;
 					}
 					$('#messageDiv').append(errorMessage);
 					
@@ -139,6 +143,7 @@
 								$('#lastName').val('');
 								$('#department').val('');
 								$('#messageDiv').append('<div class="alert alert-success" role="alert">User Created Successfully. Please remember your username : <strong>' + result.username + '</strong></div>');
+								$btn.button('reset');
 							},error:function(jqXHR, textStatus, errorThrown){
 								var errorFromServer;
 								if(jqXHR.responseText !== ''){
@@ -150,9 +155,12 @@
 							    	errorFromServer = errorThrown;
 							    }
 								$('#messageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+								$btn.button('reset');
 							}			
 						});
-					}	
+					} else {
+						$btn.button('reset');	
+					}
 					
 					return false;
 				});
@@ -185,7 +193,7 @@
 		           <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 							<ul class="nav navbar-nav">
 								<li><a href="home">Home</a></li>
-								<li class="active"><a href="signup">Registration</a></li>
+								<li class="active"><a href="signup">Sign In</a></li>
 								<li><a href="resetpassword">Reset Password</a></li>
 						   </ul>
 					</nav>
@@ -212,12 +220,11 @@
 							<input type="text" name="lastName" id="lastName" class="form-control input-lg createuser" placeholder="Last Name">
 						</div>
 						<div class="form-group">
-							<!-- <label for="department" class="createuser">Department</label> -->
-							<select id="department" name="department" class="form-control input-lg createuser" placeholder="Select a department" required></select>
+							<select id="department" name="department" class="form-control input-lg createuser"></select>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-md-6"><input id="signInButton" type="submit" name="signIn" value="Sign In" class="btn btn-success btn-block btn-lg"></div>
-							<div class="col-xs-12 col-md-6"><button id="createUserButton" name="createUser" value="Create User" class="btn btn-primary btn-block btn-lg">Register</button></div>
+							<div class="col-xs-12 col-md-6"><button id="createUserButton" name="createUser" value="Create User" class="btn btn-primary btn-block btn-lg" data-loading-text="Registering...">Register</button></div>
 						</div>
 						<br>
 						<div class="form-group" id="messageDiv">

@@ -35,7 +35,10 @@ public interface EntityService {
 	
 	Integer buildTeam();
 	
-	String getTeamName(String username);
-	boolean updateTeamName(String username, String teamName);
+	String getRsvpStatus(String username);
+	boolean updateRsvpStatus(String username, boolean flag);
+	String getNinjaStatus(String username);
+	boolean updateNinjaStatus(String username, boolean flag);
+	
 	List<String> getTeamMasterdata();
 }

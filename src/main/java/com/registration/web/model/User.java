@@ -24,6 +24,8 @@ public class User implements Serializable, UserDetails {
 	private String lastName;
 	private String department;
 	private Integer level;
+	private String rsvp;
+	private String ninja;
 	Collection<? extends GrantedAuthority> authorities;
 
 	public User(String username2, String password2,
@@ -33,6 +35,22 @@ public class User implements Serializable, UserDetails {
 
 	public User() {
 		
+	}
+
+	public String getRsvp() {
+		return rsvp;
+	}
+
+	public void setRsvp(String rsvp) {
+		this.rsvp = rsvp;
+	}
+
+	public String getNinja() {
+		return ninja;
+	}
+
+	public void setNinja(String ninja) {
+		this.ninja = ninja;
 	}
 
 	public void setId(Integer id) {

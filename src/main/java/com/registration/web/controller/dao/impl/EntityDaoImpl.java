@@ -131,12 +131,12 @@ public class EntityDaoImpl implements EntityDao {
 
 	@Override
 	public String getJsonResultSet() {
-		return (String) getEntityManager().createNativeQuery("SELECT JSONRESULTSTRING FROM FOOSBALL.JSON_RESULTSET").getSingleResult();
+		return (String) getEntityManager().createNativeQuery("SELECT JSONRESULTSTRING FROM JSON_RESULTSET").getSingleResult();
 	}
 
 	@Override
 	public String updateJsonResultSet(String json) {
-		getEntityManager().createNativeQuery("UPDATE FOOSBALL.JSON_RESULTSET SET JSONRESULTSTRING = :json, CREATEDON = :today")
+		getEntityManager().createNativeQuery("UPDATE JSON_RESULTSET SET JSONRESULTSTRING = :json, CREATEDON = :today")
 			.setParameter("json", json).setParameter("today", new Date()).executeUpdate();
 
 		return getJsonResultSet();
@@ -144,22 +144,22 @@ public class EntityDaoImpl implements EntityDao {
 
 	@Override
 	public String getFlagToAllowRatingUpdate() {
-		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM FOOSBALL.APPCONFIG WHERE NAME = 'ALLOW_RATINGS_UPDATE'").getSingleResult();
+		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM APPCONFIG WHERE NAME = 'ALLOW_RATINGS_UPDATE'").getSingleResult();
 	}
 
 	@Override
 	public String getFlagToAllowTeamNameUpdate() {
-		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM FOOSBALL.APPCONFIG WHERE NAME = 'ALLOW_TEAM_UPDATE'").getSingleResult();
+		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM APPCONFIG WHERE NAME = 'ALLOW_TEAM_UPDATE'").getSingleResult();
 	}
 
 	@Override
 	public String getFlagToAllowCreateUser() {
-		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM FOOSBALL.APPCONFIG WHERE NAME = 'ALLOW_CREATE_USER'").getSingleResult();
+		return (String) getEntityManager().createNativeQuery("SELECT VALUE FROM APPCONFIG WHERE NAME = 'ALLOW_CREATE_USER'").getSingleResult();
 	}
 
 	@Override
 	public int updateFlag(String flag, String value) {
-		return getEntityManager().createNativeQuery("UPDATE FOOSBALL.APPCONFIG SET VALUE = :value WHERE NAME = :name")
+		return getEntityManager().createNativeQuery("UPDATE APPCONFIG SET VALUE = :value WHERE NAME = :name")
 			.setParameter("value", value)
 			.setParameter("name", flag).executeUpdate();
 	}
@@ -189,25 +189,47 @@ public class EntityDaoImpl implements EntityDao {
 	}
 
 	@Override
-	public String getTeamName(String username) {
-		String teamName;
+	public String getRsvpStatus(String username) {
+		BigDecimal rsvpStatus;
 		try {
-			teamName = (String) getEntityManager()
-					.createNativeQuery(
-							"select teamname from foosball.team t join foosball.foosballuser "
-									+ "u on t.id = u.team_id where u.username = :username")
+			rsvpStatus = (BigDecimal) getEntityManager()
+					.createNativeQuery("select rsvp from registration.registereduser where username = :username")
 					.setParameter("username", username).getSingleResult();
 		} catch (NoResultException e) {
-			teamName = null;
+			rsvpStatus = null;
 		}
-		return teamName;
+		return rsvpStatus.intValue() == 0 ? "NO" : "YES";
+	}
+	
+	@Override
+	public String getNinjaStatus(String username) {
+		BigDecimal ninjaStatus;
+		try {
+			ninjaStatus = (BigDecimal) getEntityManager()
+					.createNativeQuery("select ninja from registration.registereduser where username = :username")
+					.setParameter("username", username).getSingleResult();
+		} catch (NoResultException e) {
+			ninjaStatus = null;
+		}
+		return ninjaStatus.intValue() == 0 ? "NO" : "YES";
 	}
 
 	@Override
-	public boolean updateTeamName(String username, String teamName) {
-		UserBo userBo = (UserBo) getEntityManager().createQuery(
-				"from UserBo u where u.username = :username").setParameter("username", username).getSingleResult();
-		userBo.getTeam().setName(teamName);
+	public boolean updateRsvpStatus(String username, boolean flag) {
+		UserBo userBo = (UserBo) getEntityManager()
+				.createQuery("from UserBo u where u.username = :username")
+				.setParameter("username", username).getSingleResult();
+		userBo.setRsvp(flag);
+		getEntityManager().flush();
+		return true;
+	}
+
+	@Override
+	public boolean updateNinjaStatus(String username, boolean flag) {
+		UserBo userBo = (UserBo) getEntityManager()
+				.createQuery("from UserBo u where u.username = :username")
+				.setParameter("username", username).getSingleResult();
+		userBo.setNinja(flag);
 		getEntityManager().flush();
 		return true;
 	}

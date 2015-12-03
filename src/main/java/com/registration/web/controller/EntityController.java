@@ -118,14 +118,24 @@ public class EntityController {
 		return count.toString();
 	}
 	
-	@RequestMapping(value = "/getTeamName/{username}", method = RequestMethod.GET)
-	public @ResponseBody String getTeamName(@PathVariable("username") String username) {
-		return entityService.getTeamName(username);
+	@RequestMapping(value = "/getRsvpStatus/{username}", method = RequestMethod.GET)
+	public @ResponseBody String getRsvpStatus(@PathVariable("username") String username) {
+		return entityService.getRsvpStatus(username);
 	}
 	
-	@RequestMapping(value = "/updateTeamName/{username}/{teamname}", method = RequestMethod.POST)
-	public @ResponseBody boolean updateTeamName(@PathVariable("username") String username, @PathVariable("teamname") String teamName) {
-		return entityService.updateTeamName(username, teamName);
+	@RequestMapping(value = "/getNinjaStatus/{username}", method = RequestMethod.GET)
+	public @ResponseBody String getNinjaStatus(@PathVariable("username") String username) {
+		return entityService.getNinjaStatus(username);
+	}
+	
+	@RequestMapping(value = "/updateRsvpStatus/{username}/{flag}", method = RequestMethod.POST)
+	public @ResponseBody boolean updateRsvpStatus(@PathVariable("username") String username, @PathVariable("flag") String flag) {
+		return entityService.updateRsvpStatus(username, flag.equals("true") ? true : false);
+	}
+	
+	@RequestMapping(value = "/updateNinjaStatus/{username}/{flag}", method = RequestMethod.POST)
+	public @ResponseBody boolean updateNinjaStatus(@PathVariable("username") String username, @PathVariable("flag") String flag) {
+		return entityService.updateNinjaStatus(username, flag.equals("true") ? true : false);
 	}
 	
 	@RequestMapping(value = "/foosballuser/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

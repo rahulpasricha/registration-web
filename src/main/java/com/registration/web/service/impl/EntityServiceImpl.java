@@ -44,6 +44,8 @@ public class EntityServiceImpl implements EntityService {
 			user.setFirstName(entity.getFirstName());
 			user.setLastName(entity.getLastName());
 			user.setDepartment(entityDao.getTeamMasterDataName(entity.getTeammasterdata_id()));
+			user.setRsvp(entity.isRsvp() ? "YES" : "NO");
+			user.setNinja(entity.isNinja() ? "YES" : "NO");
 			users.add(user);
 		}
 
@@ -91,6 +93,9 @@ public class EntityServiceImpl implements EntityService {
 		userEntity.setRole("ROLE_USER");
 		userEntity.setLevel(0);
 		userEntity.setTeammasterdata_id(entityDao.getTeamMasterDataId(user.getDepartment()));
+		
+		userEntity.setNinja(false);
+		userEntity.setRsvp(true);
 
 		entityDao.save(userEntity);
 
@@ -266,13 +271,23 @@ public class EntityServiceImpl implements EntityService {
 	}
 	
 	@Override
-	public String getTeamName(String username) {
-		return entityDao.getTeamName(username);
+	public String getRsvpStatus(String username) {
+		return entityDao.getRsvpStatus(username);
+	}
+	
+	@Override
+	public String getNinjaStatus(String username) {
+		return entityDao.getNinjaStatus(username);
 	}
 
 	@Override
-	public boolean updateTeamName(String username, String teamName) {
-		return entityDao.updateTeamName(username, teamName);
+	public boolean updateRsvpStatus(String username, boolean flag) {
+		return entityDao.updateRsvpStatus(username, flag);
+	}
+	
+	@Override
+	public boolean updateNinjaStatus(String username, boolean flag) {
+		return entityDao.updateNinjaStatus(username, flag);
 	}
 
 	@Override
