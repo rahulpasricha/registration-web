@@ -158,6 +158,7 @@
 						url: 'getAllFoosballUsers.fd',
 						contentType: 'application/json; charset=utf-8',
 						dataType: 'json',
+						cache: false,
 						success: function(result) {
 							$('#playerMessageDiv').html('');
 							var tableHtml = '<table class="table table-bordered table-striped table-hover"><th>Members</th><th>Department</th><th>RSVP</th><th>Participating in NINJA</th></tr></thead><tbody>';

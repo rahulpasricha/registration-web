@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,12 @@ public class EntityController {
 	public @ResponseBody List<User> getAllFoosballusers() {
 		return entityService.getAllFoosballusers();
 	}
-
+	
+	@RequestMapping(value = "/getAllPresentExchangeUsers", method = RequestMethod.GET)
+	public @ResponseBody List<User> getAllPresentExchangeUsers() {
+		return entityService.getAllPresentExchangeUsers();
+	}
+	
 	@RequestMapping(value = "/createFoosballUser.fd", method = RequestMethod.POST)
 	public @ResponseBody User create(@RequestBody User user, HttpServletResponse response) throws FoosballException {
 		User userObject = null;
@@ -128,6 +132,11 @@ public class EntityController {
 		return entityService.getNinjaStatus(username);
 	}
 	
+	@RequestMapping(value = "/getPresentExchangeStatus/{username}", method = RequestMethod.GET)
+	public @ResponseBody String getPresentExchangeStatus(@PathVariable("username") String username) {
+		return entityService.getPresentExchangeStatus(username);
+	}
+	
 	@RequestMapping(value = "/updateRsvpStatus/{username}/{flag}", method = RequestMethod.POST)
 	public @ResponseBody boolean updateRsvpStatus(@PathVariable("username") String username, @PathVariable("flag") String flag) {
 		return entityService.updateRsvpStatus(username, flag.equals("true") ? true : false);
@@ -136,6 +145,11 @@ public class EntityController {
 	@RequestMapping(value = "/updateNinjaStatus/{username}/{flag}", method = RequestMethod.POST)
 	public @ResponseBody boolean updateNinjaStatus(@PathVariable("username") String username, @PathVariable("flag") String flag) {
 		return entityService.updateNinjaStatus(username, flag.equals("true") ? true : false);
+	}
+	
+	@RequestMapping(value = "/updatePresentExchangeStatus/{username}/{flag}", method = RequestMethod.POST)
+	public @ResponseBody boolean updatePresentExchangeStatus(@PathVariable("username") String username, @PathVariable("flag") String flag) {
+		return entityService.updatePresentExchangeStatus(username, flag.equals("true") ? true : false);
 	}
 	
 	@RequestMapping(value = "/foosballuser/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

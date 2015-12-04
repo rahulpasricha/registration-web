@@ -60,6 +60,17 @@ public class UserBo implements Serializable {
 	
 	@JoinColumn(name = "NINJA")
 	private boolean ninja;
+	
+	@JoinColumn(name = "PRESENTEXCHANGE")
+	private boolean presentExchange;
+
+	public boolean isPresentExchange() {
+		return presentExchange;
+	}
+
+	public void setPresentExchange(boolean presentExchange) {
+		this.presentExchange = presentExchange;
+	}
 
 	public boolean isRsvp() {
 		return rsvp;

@@ -78,6 +78,7 @@
 				$.ajax({
 					 url:"getTeamMasterdata"
 					,type: "GET"
+					,cache: false
 					,success:function(actionResult){
 						 var optionData = "<option value=' ' selected='selected'>";
 						 $.each(actionResult, function (index, value) {
@@ -208,19 +209,24 @@
 						<h3>Sign In / Register </h3>
 						<hr>
 						<div class="form-group">
-							<input type="username" name="username" id="username" class="form-control input-lg" placeholder="Username" required>
+							<label for="username" id="username_label">Username</label>
+							<input type="username" name="username" id="username" class="form-control input-md" placeholder="Username" required>
 						</div>
 						<div class="form-group">
-							<input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" required>
+							<label for="password" id="password_label">Password</label>
+							<input type="password" name="password" id="password" class="form-control input-md" placeholder="Password" required>
 						</div>
 						<div class="form-group">
-							<input type="text" name="firstName" id="firstName" class="form-control input-lg createuser" placeholder="First Name">
+							<label for="firstName" id="firstName_label" class="createuser">First Name</label>
+							<input type="text" name="firstName" id="firstName" class="form-control input-md createuser" placeholder="First Name">
 						</div>
 						<div class="form-group">
-							<input type="text" name="lastName" id="lastName" class="form-control input-lg createuser" placeholder="Last Name">
+							<label for="lastName" id="lastName_label" class="createuser">Last Name</label>
+							<input type="text" name="lastName" id="lastName" class="form-control input-md createuser" placeholder="Last Name">
 						</div>
 						<div class="form-group">
-							<select id="department" name="department" class="form-control input-lg createuser"></select>
+							<label for="department" id="department_label" class="createuser">Department</label>
+							<select id="department" name="department" class="form-control input-md createuser"></select>
 						</div>
 						<div class="row">
 							<div class="col-xs-12 col-md-6"><input id="signInButton" type="submit" name="signIn" value="Sign In" class="btn btn-success btn-block btn-lg"></div>

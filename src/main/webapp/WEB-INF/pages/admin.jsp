@@ -158,6 +158,39 @@
 						});
 				 });
 				 
+				 $.ajax({
+						type: 'GET',
+						url: 'getAllPresentExchangeUsers',
+						contentType: 'application/json; charset=utf-8',
+						dataType: 'json',
+						cache: false,
+						success: function(result) {
+							$('#presentExchangeMessageDiv').html('');
+							var tableHtml = '<table class="table table-bordered table-striped table-hover"><th>Members</th><th>Department</th></tr></thead><tbody>';
+							 $.each(result, function (index, value) {
+								 tableHtml += '<tr><td>' + value.firstName + ' ' + value.lastName + '</td>';
+								 tableHtml += '<td>' + value.department + '</td>';
+								 tableHtml += '</tr>';
+							 });
+							 tableHtml += '</tbody></table>';
+							 $(tableHtml).appendTo($('#listOfPresentExchangeMembers'));
+							 
+							 $('#presentExchangeMessageDiv').append('<div class="alert alert-info" role="alert"><strong>'+ result.length 
+									 +' user(s) have registered for present exchange.</div>');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#presentExchangeMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+						}							
+				  	});
+				 
 				 //$("#buildTeamButton").prop("disabled", true);
 				 
 			});
@@ -227,6 +260,22 @@
 					<div class="row" id="buildTeamMessageDiv">
 						
 					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-sm-7 col-xs-offset-1">
+					<div class="row">
+						<h3>Present Exchange Initiative&nbsp;<small>All the members enrolled for present exchange initiative</small></h3>
+					</div>
+					<br>
+						<div class="row" id="listOfPresentExchangeMembers">
+							
+						</div>
+						<div class="row" id="presentExchangeMessageDiv">
+						
+						</div>
+					<br>
 				</div>
 			</div>
         </div>

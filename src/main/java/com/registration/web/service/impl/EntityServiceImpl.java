@@ -2,6 +2,7 @@ package com.registration.web.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -46,6 +47,23 @@ public class EntityServiceImpl implements EntityService {
 			user.setDepartment(entityDao.getTeamMasterDataName(entity.getTeammasterdata_id()));
 			user.setRsvp(entity.isRsvp() ? "YES" : "NO");
 			user.setNinja(entity.isNinja() ? "YES" : "NO");
+			users.add(user);
+		}
+
+		return users;
+	}
+	
+	@Override
+	public List<User> getAllPresentExchangeUsers() {
+		List<User> users = new ArrayList<User>();
+
+		List<UserBo> entities = entityDao.getAllPresentExchangeUsers();
+		for (UserBo entity : entities) {
+			User user = new User();
+
+			user.setFirstName(entity.getFirstName());
+			user.setLastName(entity.getLastName());
+			user.setDepartment(entityDao.getTeamMasterDataName(entity.getTeammasterdata_id()));
 			users.add(user);
 		}
 
@@ -289,6 +307,16 @@ public class EntityServiceImpl implements EntityService {
 	public boolean updateNinjaStatus(String username, boolean flag) {
 		return entityDao.updateNinjaStatus(username, flag);
 	}
+	
+	@Override
+	public String getPresentExchangeStatus(String username) {
+		return entityDao.getPresentExchangeStatus(username);
+	}
+
+	@Override
+	public boolean updatePresentExchangeStatus(String username, boolean flag) {
+		return entityDao.updatePresentExchangeStatus(username, flag);
+	}
 
 	@Override
 	public User findById(Integer id) {
@@ -394,7 +422,20 @@ public class EntityServiceImpl implements EntityService {
 
 	@Override
 	public List<String> getTeamMasterdata() {
-		return entityDao.getTeamMasterdata();
+		List<String> teams = entityDao.getTeamMasterdata();
+		List<String> sortedList = new ArrayList<>();
+		
+		String other = "Other";
+		for (String team : teams) {
+			if ("Other".equals(team)) {
+				continue;
+			}
+			sortedList.add(team);
+		}
+		Collections.sort(sortedList);
+		sortedList.add(other);
+		
+		return sortedList;
 	}
 
 }

@@ -115,6 +115,7 @@
 				$.ajax({
 					type: 'GET',
 					url: 'getRsvpStatus/' + username ,
+					cache: false,
 					success: function(result) {
 						$("#currentRsvpStatus").html(result);
 					}							
@@ -125,8 +126,22 @@
 				$.ajax({
 					type: 'GET',
 					url: 'getNinjaStatus/' + username ,
+					cache: false,
 					success: function(result) {
 						$("#currentNinjaStatus").html(result);
+					}							
+			  	});
+			};
+			
+			function getPresentExchangeStatus(username) {
+				$.ajax({
+					type: 'GET',
+					url: 'getPresentExchangeStatus/' + username ,
+					cache: false,
+					success: function(result) {
+						//setTimeout(function() {
+							$("#currentPresentExchangeStatus").html(result);
+						//}, 1000);
 					}							
 			  	});
 			};
@@ -263,9 +278,73 @@
 					
 				});
 				
+				$('#presentExchangeInButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updatePresentExchangeStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updatePresentExchangeStatus/' + loggedInUser + '/' + 'true',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updatePresentExchangeStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Present Exchange status updated successfully.</strong></div>');
+							getPresentExchangeStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updatePresentExchangeStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
+				
+				$('#presentExchangeOutButton').on('click', function(e) {
+					e.preventDefault();
+					$('#updatePresentExchangeStatusMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: 'updatePresentExchangeStatus/' + loggedInUser + '/' + 'false',
+						dataType: 'json',												
+						success: function(result) {
+							$('#updatePresentExchangeStatusMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Present Exchange status updated successfully.</strong></div>');
+							getPresentExchangeStatus(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#updatePresentExchangeStatusMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
 				$(function() {
 					getRsvpStatus(loggedInUser);
 					getNinjaStatus(loggedInUser);
+					getPresentExchangeStatus(loggedInUser);
 				});
 				
 			});
@@ -308,7 +387,7 @@
 					</div>
 					<br>
 					<div class="row">
-						<h3><small>Your current RSVP status is &nbsp&nbsp</small><span class="label label-info" id="currentRsvpStatus"></span></h3>
+						<h3><small>Your current RSVP status is &nbsp;&nbsp;</small><span class="label label-info" id="currentRsvpStatus"></span></h3>
 						<h3><small>Use the following buttons to update your RSVP status</small><span class="label label-default" id="currentRsvpStatus"></span></h3>
 						<br>
 						<div class="row">
@@ -327,7 +406,7 @@
 					</div>
 					<br>
 					<div class="row">
-						<h3><small>Your current NINJA status is &nbsp&nbsp</small><span class="label label-info" id="currentNinjaStatus"></span></h3>
+						<h3><small>Your current NINJA status is &nbsp;&nbsp;</small><span class="label label-info" id="currentNinjaStatus"></span></h3>
 						<h3><small>Use IN button if you want to participate in the NINJA game</small><span class="label label-default" id="currentNinjaStatus"></span></h3>
 						<br>
 						<div class="row">
@@ -338,6 +417,27 @@
 						<div class="form-group" id="updateNinjaStatusMessageDiv">
 							
 						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 col-xs-offset-1">
+					<div class="row">
+						<h3>Present Exchange Initiative</h3>
+					</div>
+					<br>
+					<div class="row">
+						<h3><small>Your current status is &nbsp;&nbsp;</small><span class="label label-info" id="currentPresentExchangeStatus"></span></h3>
+						<h3><small>Use the following buttons to tell us if you are intereseted in the present exchange initiative</small><span class="label label-default" id="currentPresentExchangeStatus"></span></h3>
+						<br>
+						<div class="row">
+							<div class="col-xs-12 col-md-6"><button id="presentExchangeInButton" type="submit" value="IN" class="btn btn-success btn-block btn-lg" data-loading-text="Updating...">IN</button></div>
+							<div class="col-xs-12 col-md-6"><button id="presentExchangeOutButton" type="submit" value="OUT" class="btn btn-danger btn-block btn-lg" data-loading-text="Updating...">OUT</button></div>
+						</div>
+						<br>
+						<div class="form-group" id="updatePresentExchangeStatusMessageDiv">
+							
+						</div>						
 					</div>
 				</div>
 			</div>

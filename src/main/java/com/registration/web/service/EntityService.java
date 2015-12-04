@@ -39,6 +39,11 @@ public interface EntityService {
 	boolean updateRsvpStatus(String username, boolean flag);
 	String getNinjaStatus(String username);
 	boolean updateNinjaStatus(String username, boolean flag);
+	String getPresentExchangeStatus(String username);
+	boolean updatePresentExchangeStatus(String username, boolean flag);
 	
 	List<String> getTeamMasterdata();
+	
+	List<User> getAllPresentExchangeUsers();
+	
 }

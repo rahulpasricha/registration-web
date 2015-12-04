@@ -39,8 +39,12 @@ public interface EntityDao {
 	String getNinjaStatus(String username);
 	boolean updateRsvpStatus(String username, boolean flag);
 	boolean updateNinjaStatus(String username, boolean flag);
+	String getPresentExchangeStatus(String username);
+	boolean updatePresentExchangeStatus(String username, boolean flag);
+	
 	List<String> getTeamMasterdata();
 	Integer getTeamMasterDataId(String department);
 	String getTeamMasterDataName(Integer teammasterdata_id);
 	
+	List<UserBo> getAllPresentExchangeUsers();
 }
