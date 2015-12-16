@@ -191,6 +191,39 @@
 						}							
 				  	});
 				 
+					 $.ajax({
+							type: 'GET',
+							url: 'getAllHolidayJingleUsers',
+							contentType: 'application/json; charset=utf-8',
+							dataType: 'json',
+							cache: false,
+							success: function(result) {
+								$('#holidayJingleMessageDiv').html('');
+								var tableHtml = '<table class="table table-bordered table-striped table-hover"><th>Members</th><th>Jingle</th></tr></thead><tbody>';
+								 $.each(result, function (index, value) {
+									 tableHtml += '<tr><td>' + value.firstName + ' ' + value.lastName + '</td>';
+									 tableHtml += '<td><textarea class="form-control" rows="4">' + value.holidayjingle + '</textarea></td>';
+									 tableHtml += '</tr>';
+								 });
+								 tableHtml += '</tbody></table>';
+								 $(tableHtml).appendTo($('#listOfHolidayJingleUsers'));
+								 
+								 $('#holidayJingleMessageDiv').append('<div class="alert alert-info" role="alert"><strong>'+ result.length 
+										 +' user(s) have submitted holiday jingles.</div>');
+							},error:function(jqXHR, textStatus, errorThrown){
+								var errorFromServer;
+								if(jqXHR.responseText !== ''){
+									errorFromServer = jqXHR.responseText;
+									if (errorFromServer.indexOf("<html>") >= 0) {
+										errorFromServer = errorThrown;
+									}
+							    } else {
+							    	errorFromServer = errorThrown;
+							    }
+								$('#holidayJingleMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							}							
+					  	});
+				 
 				 //$("#buildTeamButton").prop("disabled", true);
 				 
 			});
@@ -266,13 +299,28 @@
 			<div class="row">
 				<div class="col-sm-7 col-xs-offset-1">
 					<div class="row">
-						<h3>Present Exchange Initiative&nbsp;<small>All the members enrolled for present exchange initiative</small></h3>
+						<h3>Holiday Present Exchange Initiative&nbsp;<br><br><small>All the members enrolled for present exchange initiative</small></h3>
 					</div>
 					<br>
 						<div class="row" id="listOfPresentExchangeMembers">
 							
 						</div>
 						<div class="row" id="presentExchangeMessageDiv">
+						
+						</div>
+					<br>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-9 col-xs-offset-1">
+					<div class="row">
+						<h3>Submitted Holiday Jingles&nbsp;<br><br><small>All users that have submitted a holiday Jingle</small></h3>
+					</div>
+					<br>
+						<div class="row" id="listOfHolidayJingleUsers">
+							
+						</div>
+						<div class="row" id="holidayJingleMessageDiv">
 						
 						</div>
 					<br>

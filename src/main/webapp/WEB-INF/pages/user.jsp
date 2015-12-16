@@ -145,6 +145,17 @@
 					}							
 			  	});
 			};
+			
+			function getHolidayJingle(username) {
+				$.ajax({
+					type: 'GET',
+					url: 'getHolidayJingle/' + username ,
+					cache: false,
+					success: function(result) {
+						$("#holidayJingleTextArea").html(decodeURI(result));
+					}							
+			  	});
+			};
 		
 			$(document).ready(function() {
 				
@@ -341,10 +352,44 @@
 					
 				});
 				
+				$('#submitHolidayJingle').on('click', function(e) {
+					e.preventDefault();
+					$('#submitHolidayJingleMessageDiv').html('');
+					var $btn = $(this).button('loading');
+					var jingle = $('#holidayJingleTextArea').val();
+					var encodedUri = encodeURI('updateHolidayJingle/' + loggedInUser + '?jingle=' + jingle);
+					
+					$.ajax ({
+						type: 'POST',
+						contentType: 'application/json; charset=utf-8',
+						url: encodedUri,
+						dataType: 'json',												
+						success: function(result) {
+							$('#submitHolidayJingleMessageDiv').append('<div class="alert alert-info" role="alert"><strong>Holiday jingle updated successfully.</strong></div>');
+							getHolidayJingle(loggedInUser);
+							$btn.button('reset');
+						},error:function(jqXHR, textStatus, errorThrown){
+							var errorFromServer;
+							if(jqXHR.responseText !== ''){
+								errorFromServer = jqXHR.responseText;
+								if (errorFromServer.indexOf("<html>") >= 0) {
+									errorFromServer = errorThrown;
+								}
+						    } else {
+						    	errorFromServer = errorThrown;
+						    }
+							$('#submitHolidayJingleMessageDiv').append('<div class="alert alert-danger" role="alert">Failed : <strong>' + errorFromServer + '</strong></div>');
+							$btn.button('reset');
+						}						
+					});	
+					
+				});
+				
 				$(function() {
 					getRsvpStatus(loggedInUser);
 					getNinjaStatus(loggedInUser);
 					getPresentExchangeStatus(loggedInUser);
+					getHolidayJingle(loggedInUser)
 				});
 				
 			});
@@ -423,12 +468,12 @@
 			<div class="row">
 				<div class="col-sm-4 col-xs-offset-1">
 					<div class="row">
-						<h3>Present Exchange Initiative</h3>
+						<h3>Holiday  Present Exchange</h3>
 					</div>
 					<br>
 					<div class="row">
 						<h3><small>Your current status is &nbsp;&nbsp;</small><span class="label label-info" id="currentPresentExchangeStatus"></span></h3>
-						<h3><small>Use the following buttons to tell us if you are intereseted in the present exchange initiative</small><span class="label label-default" id="currentPresentExchangeStatus"></span></h3>
+						<h3><small>Use the following buttons to tell us if you are intereseted in holiday present exchange.</small><span class="label label-default" id="currentPresentExchangeStatus"></span></h3>
 						<br>
 						<div class="row">
 							<div class="col-xs-12 col-md-6"><button id="presentExchangeInButton" type="submit" value="IN" class="btn btn-success btn-block btn-lg" data-loading-text="Updating...">IN</button></div>
@@ -436,6 +481,24 @@
 						</div>
 						<br>
 						<div class="form-group" id="updatePresentExchangeStatusMessageDiv">
+							
+						</div>						
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-9 col-xs-offset-1">
+					<div class="row">
+						<h3>Holiday Jingle</h3>
+					</div>
+					<div class="row">
+						<h3><small>Submit a holiday jingle.</small><span class="label label-default" id="currentPresentExchangeStatus"></span></h3>
+						<br>
+						  <textarea class="form-control" rows="20" id="holidayJingleTextArea"></textarea>
+						  <br>
+						<button id="submitHolidayJingle" type="submit" value="Submit" class="btn btn-success btn-lg" data-loading-text="Submitting...">Submit the Jingle</button>
+						<br><br>
+						<div class="form-group" id="submitHolidayJingleMessageDiv">
 							
 						</div>						
 					</div>

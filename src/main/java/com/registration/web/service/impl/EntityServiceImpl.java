@@ -69,6 +69,23 @@ public class EntityServiceImpl implements EntityService {
 
 		return users;
 	}
+	
+	@Override
+	public List<User> getAllHolidayJingleUsers() {
+		List<User> users = new ArrayList<User>();
+
+		List<UserBo> entities = entityDao.getAllHolidayJingleUsers();
+		for (UserBo entity : entities) {
+			User user = new User();
+
+			user.setFirstName(entity.getFirstName());
+			user.setLastName(entity.getLastName());
+			user.setHolidayjingle(entity.getHolidayJingle());
+			users.add(user);
+		}
+
+		return users;
+	}
 
 	@Override
 	public User getUser(String userName) {
@@ -316,6 +333,16 @@ public class EntityServiceImpl implements EntityService {
 	@Override
 	public boolean updatePresentExchangeStatus(String username, boolean flag) {
 		return entityDao.updatePresentExchangeStatus(username, flag);
+	}
+	
+	@Override
+	public String getHolidayJingle(String username) {
+		return entityDao.getHolidayJingle(username);
+	}
+
+	@Override
+	public boolean updateHolidayJingle(String username, String jingle) {
+		return entityDao.updateHolidayJingle(username, jingle);
 	}
 
 	@Override

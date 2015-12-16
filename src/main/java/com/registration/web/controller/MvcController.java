@@ -13,6 +13,11 @@ public class MvcController {
 	public ModelAndView homePage() {
 		return new ModelAndView("home");
 	}
+	
+	@RequestMapping(value = { "/gallery**" }, method = RequestMethod.GET)
+	public ModelAndView galleryPage() {
+		return new ModelAndView("gallery");
+	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
 	public ModelAndView adminPage() {

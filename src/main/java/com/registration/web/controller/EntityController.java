@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -38,6 +39,11 @@ public class EntityController {
 	@RequestMapping(value = "/getAllPresentExchangeUsers", method = RequestMethod.GET)
 	public @ResponseBody List<User> getAllPresentExchangeUsers() {
 		return entityService.getAllPresentExchangeUsers();
+	}
+	
+	@RequestMapping(value = "/getAllHolidayJingleUsers", method = RequestMethod.GET)
+	public @ResponseBody List<User> getAllHolidayJingleUsers() {
+		return entityService.getAllHolidayJingleUsers();
 	}
 	
 	@RequestMapping(value = "/createFoosballUser.fd", method = RequestMethod.POST)
@@ -135,6 +141,16 @@ public class EntityController {
 	@RequestMapping(value = "/getPresentExchangeStatus/{username}", method = RequestMethod.GET)
 	public @ResponseBody String getPresentExchangeStatus(@PathVariable("username") String username) {
 		return entityService.getPresentExchangeStatus(username);
+	}
+	
+	@RequestMapping(value = "/getHolidayJingle/{username}", method = RequestMethod.GET)
+	public @ResponseBody String getHolidayJingle(@PathVariable("username") String username) {
+		return entityService.getHolidayJingle(username);
+	}
+	
+	@RequestMapping(value = "/updateHolidayJingle/{username}", method = RequestMethod.POST)
+	public @ResponseBody boolean updateHolidayJingle(@PathVariable("username") String username,  @RequestParam("jingle") String jingle) {
+		return entityService.updateHolidayJingle(username, jingle);
 	}
 	
 	@RequestMapping(value = "/updateRsvpStatus/{username}/{flag}", method = RequestMethod.POST)

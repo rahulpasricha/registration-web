@@ -47,4 +47,7 @@ public interface EntityDao {
 	String getTeamMasterDataName(Integer teammasterdata_id);
 	
 	List<UserBo> getAllPresentExchangeUsers();
+	String getHolidayJingle(String username);
+	boolean updateHolidayJingle(String username, String jingle);
+	List<UserBo> getAllHolidayJingleUsers();
 }

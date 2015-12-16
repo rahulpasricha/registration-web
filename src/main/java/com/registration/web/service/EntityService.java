@@ -45,5 +45,8 @@ public interface EntityService {
 	List<String> getTeamMasterdata();
 	
 	List<User> getAllPresentExchangeUsers();
+	String getHolidayJingle(String username);
+	boolean updateHolidayJingle(String username, String jingle);
+	List<User> getAllHolidayJingleUsers();
 	
 }

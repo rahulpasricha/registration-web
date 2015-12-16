@@ -45,6 +45,13 @@ public class EntityDaoImpl implements EntityDao {
 		Query query = getEntityManager().createQuery("SELECT u from UserBo u where u.presentExchange = 1 and u.username != 'admin'");
 		return query.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserBo> getAllHolidayJingleUsers() {
+		Query query = getEntityManager().createQuery("SELECT u from UserBo u where u.holidayJingle is not null and u.username != 'admin'");
+		return query.getResultList();
+	}
 
 	@Override
 	public UserBo getUser(String userName) {
@@ -261,6 +268,24 @@ public class EntityDaoImpl implements EntityDao {
 				.createQuery("from UserBo u where u.username = :username")
 				.setParameter("username", username).getSingleResult();
 		userBo.setPresentExchange(flag);
+		getEntityManager().flush();
+		return true;
+	}
+	
+	@Override
+	public String getHolidayJingle(String username) {
+		return (String) getEntityManager()
+				.createNativeQuery(
+						"select holidayjingle from registration.registereduser where username = :username")
+				.setParameter("username", username).getSingleResult();
+	}
+
+	@Override
+	public boolean updateHolidayJingle(String username, String jingle) {
+		UserBo userBo = (UserBo) getEntityManager()
+				.createQuery("from UserBo u where u.username = :username")
+				.setParameter("username", username).getSingleResult();
+		userBo.setHolidayJingle(jingle);
 		getEntityManager().flush();
 		return true;
 	}
